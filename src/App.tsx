@@ -181,7 +181,6 @@ const App: React.FC = () => {
               ],
             },
           }),
-          new MeasureToolsUiItemsProvider(),
         ]}
       />
     </div>
