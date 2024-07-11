@@ -37,6 +37,8 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Auth } from "./Auth";
 import { history } from "./history";
+import { LeftPanelUIProvider } from "./LeftPanelUIProvider";
+import { BottomGridUIProvider } from "./BottomGridUIProvider";
 
 const App: React.FC = () => {
   const [iModelId, setIModelId] = useState(process.env.IMJS_IMODEL_ID);
@@ -154,6 +156,8 @@ const App: React.FC = () => {
         enablePerformanceMonitors={true} // see description in the README (https://www.npmjs.com/package/@itwin/web-viewer-react)
         onIModelAppInit={onIModelAppInit}
         uiProviders={[
+          new LeftPanelUIProvider(),
+          new BottomGridUIProvider(),
           new ViewerNavigationToolsProvider(),
           new ViewerContentToolsProvider({
             vertical: {
