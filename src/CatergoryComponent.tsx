@@ -29,7 +29,9 @@ export function CatergoryComponent () {
       ))
 return(
 <div> 
-<ul>  </ul>
+<ul>  
+  {categoryElements}
+</ul>
  
  
     </div>
