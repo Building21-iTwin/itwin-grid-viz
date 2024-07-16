@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-  ]
+, "BottomGridUIProvider.tsx", "LeftPanelUIProvider.tsx"  ]
 }
