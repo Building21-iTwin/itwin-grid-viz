@@ -10,6 +10,7 @@ import { Table, TableProps } from "./TableGrid";
 import { IModelApp, IModelConnection } from "@itwin/core-frontend";
 import { UnifiedSelectionContextProvider } from "@itwin/presentation-components";
 import React, { useEffect } from "react";
+import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 
 function RulesTable() {
   const [iModel, setIModel] = React.useState<IModelConnection | undefined>(
@@ -28,9 +29,11 @@ function RulesTable() {
     );
   }
   return (
-    <UnifiedSelectionContextProvider imodel={iModel}>
-      <Table width={400} height={400} iModel={iModel} />
-    </UnifiedSelectionContextProvider>
+    <ErrorBoundary fallback={<div>Something went wrong</div>}>
+      <UnifiedSelectionContextProvider imodel={iModel}>
+        <Table width={400} height={400} iModel={iModel} />
+      </UnifiedSelectionContextProvider>
+    </ErrorBoundary>
   );
 }
 
