@@ -13,6 +13,7 @@ import {
   TableRowDefinition,
   usePresentationTableWithUnifiedSelection,
 } from "@itwin/presentation-components";
+
 import { CenteredContent } from "./CenteredContent";
 
 export interface TableProps {
