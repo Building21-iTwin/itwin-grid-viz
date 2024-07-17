@@ -6,6 +6,8 @@ import {
   Widget,
 } from "@itwin/appui-react";
 
+import RulesTable from "./RulesTable";
+
 export class BottomGridUIProvider implements UiItemsProvider {
   public readonly id = "BottomGridUIProvider";
 
@@ -23,8 +25,8 @@ export class BottomGridUIProvider implements UiItemsProvider {
     ) {
       const bottomGrid: Widget = {
         id: "BottomGrid",
-        label: "BottomGrid",
-        content: <span>"BottomGridPlaceholder"</span>,
+        label: "Description Grid",
+        content: <RulesTable />,
       };
       widgets.push(bottomGrid);
     }
