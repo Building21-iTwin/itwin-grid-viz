@@ -1,6 +1,8 @@
-import { category } from "@itwin/appui-layout-react/lib/cjs/appui-layout-react/state/internal/NineZoneStateHelpers";
 import { IModelApp } from "@itwin/core-frontend";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import selectCategory from "./CategorySelection";
+import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
+import { Presentation } from "@itwin/presentation-frontend";
 
 interface Category {
   label: string;
@@ -8,7 +10,10 @@ interface Category {
 }
 
 export function CategoryComponent() {
-  const [categories, setCategories] = React.useState<Category[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     const getCategories = async () => {
@@ -23,11 +28,46 @@ export function CategoryComponent() {
     };
 
     getCategories();
-  }, []);
+  }, [categories]);
+
+  async function selectCategory(ids: string[]) {
+    const iModel = IModelApp.viewManager.selectedView?.iModel;
+    if (iModel) {
+      const queryReader = iModel.createQueryReader(
+        "SELECT ec_classname(ECClassId, 's:c') as [classname], ECInstanceId as [id] FROM bis.GeometricElement3d WHERE InVirtualSet(?, Category.Id)",
+        QueryBinder.from([ids]),
+        { rowFormat: QueryRowFormat.UseECSqlPropertyNames }
+      );
+      const elements = await queryReader.toArray();
+      Presentation.selection.replaceSelection(
+        "category",
+        iModel,
+        elements.map((element) => ({
+          id: element.id,
+          className: element.classname,
+        }))
+      );
+    }
+  }
+
+  const handleCategoryChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const categoryId = event.target.id;
+    setSelectedCategoryId(categoryId);
+
+    await selectCategory([categoryId]);
+  };
 
   const categoryElements = categories.map((category) => (
     <li key={category.id}>
-      <input type="checkbox" id={category.id} />
+      <input
+        type="radio"
+        id={category.id}
+        name="category"
+        checked={selectedCategoryId === category.id}
+        onChange={handleCategoryChange}
+      />
       <label htmlFor={category.id}>{category.label}</label>
     </li>
   ));
