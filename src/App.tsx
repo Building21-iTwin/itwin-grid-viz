@@ -147,6 +147,7 @@ const App: React.FC = () => {
           </div>
         </FillCentered>
       )}
+
       <Viewer
         iTwinId={iTwinId ?? ""}
         iModelId={iModelId ?? ""}

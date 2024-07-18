@@ -5,7 +5,6 @@ import {
   UiItemsProvider,
   Widget,
 } from "@itwin/appui-react";
-
 import RulesTable from "./RulesTable";
 
 export class BottomGridUIProvider implements UiItemsProvider {
