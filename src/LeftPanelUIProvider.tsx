@@ -4,10 +4,8 @@ import {
   StageUsage,
   UiItemsProvider,
   Widget,
-
 } from "@itwin/appui-react";
-import { CatergoryComponent } from "./CatergoryComponent"
-
+import { CategoryComponent } from "./CategoryComponent";
 
 export class LeftPanelUIProvider implements UiItemsProvider {
   public readonly id = "LeftPanelUIProvider";
@@ -27,8 +25,7 @@ export class LeftPanelUIProvider implements UiItemsProvider {
       const firstWidget: Widget = {
         id: "FirstWidget",
         label: "FirstWidget",
-        content: <CatergoryComponent></CatergoryComponent>
-      
+        content: <CategoryComponent />,
       };
       widgets.push(firstWidget);
     }

@@ -3,6 +3,7 @@ import { Table } from "./TableGrid";
 import { UnifiedSelectionContextProvider } from "@itwin/presentation-components";
 import React, { useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { ViewHelper } from "@itwin/measure-tools-react";
 
 function RulesTable() {
   const [iModel, setIModel] = React.useState<IModelConnection | undefined>(
@@ -21,12 +22,14 @@ function RulesTable() {
     );
   }
   return (
-    <ErrorBoundary fallback={<div>Something went wrong</div>}>
+    <ErrorBoundary FallbackComponent={ResetPage}>
       <UnifiedSelectionContextProvider imodel={iModel}>
         <Table width={400} height={400} iModel={iModel} />
       </UnifiedSelectionContextProvider>
     </ErrorBoundary>
   );
 }
-
+function ResetPage(props: { error: Error; resetErrorBoundary: () => void }) {
+  return <button onClick={props.resetErrorBoundary}> Refresh</button>;
+}
 export default RulesTable;
