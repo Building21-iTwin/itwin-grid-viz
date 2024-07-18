@@ -24,7 +24,7 @@ export class BottomGridUIProvider implements UiItemsProvider {
     ) {
       const bottomGrid: Widget = {
         id: "BottomGrid",
-        label: "BottomGrid",
+        label: "Description Grid",
         content: <RulesTable />,
       };
       widgets.push(bottomGrid);
