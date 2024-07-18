@@ -1,6 +1,5 @@
 import { IModelApp } from "@itwin/core-frontend";
 import React, { useEffect, useState } from "react";
-import selectCategory from "./CategorySelection";
 import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
 import { Presentation } from "@itwin/presentation-frontend";
 
