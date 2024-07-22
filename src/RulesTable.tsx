@@ -4,6 +4,8 @@ import { UnifiedSelectionContextProvider } from "@itwin/presentation-components"
 import React, { useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { ViewHelper } from "@itwin/measure-tools-react";
+import { ColorPickerButton } from "@itwin/imodel-components-react";
+import { ColorDef } from "@itwin/core-common";
 
 function RulesTable() {
   const [iModel, setIModel] = React.useState<IModelConnection | undefined>(
@@ -21,6 +23,15 @@ function RulesTable() {
       </div>
     );
   }
+
+  const [colorValueState, SetColorValueState] = React.useState<ColorDef>(
+    ColorDef.red
+  );
+
+  const _onColorPick = (colorValue: ColorDef) => {
+    SetColorValueState(colorValue);
+  };
+
   return (
     <ErrorBoundary FallbackComponent={ResetPage}>
       <UnifiedSelectionContextProvider imodel={iModel}>
