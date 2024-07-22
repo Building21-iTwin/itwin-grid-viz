@@ -23,7 +23,6 @@ function RulesTable() {
       </div>
     );
   }
-
   const [colorValueState, SetColorValueState] = React.useState<ColorDef>(
     ColorDef.red
   );
@@ -31,7 +30,6 @@ function RulesTable() {
   const _onColorPick = (colorValue: ColorDef) => {
     SetColorValueState(colorValue);
   };
-
   return (
     <ErrorBoundary FallbackComponent={ResetPage}>
       <UnifiedSelectionContextProvider imodel={iModel}>
