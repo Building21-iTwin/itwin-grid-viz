@@ -1,6 +1,6 @@
 import { IModelApp } from "@itwin/core-frontend";
 import React, { useEffect, useState } from "react";
-import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
+import { ColorDef, QueryBinder, QueryRowFormat } from "@itwin/core-common";
 import { Presentation } from "@itwin/presentation-frontend";
 
 interface Category {
@@ -17,6 +17,11 @@ export function CategoryComponent() {
   useEffect(() => {
     const getCategories = async () => {
       const iModel = IModelApp.viewManager.selectedView?.iModel;
+      const viewport = IModelApp.viewManager.selectedView;
+      if (viewport) {
+        const newHilite = { ...viewport.hilite, color: ColorDef.red };
+        viewport.hilite = newHilite;
+      }
       if (iModel) {
         const queryReader = iModel.createQueryReader(
           "SELECT ECInstanceId, UserLabel FROM bis.SpatialCategory"
