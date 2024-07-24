@@ -1,14 +1,17 @@
+import * as React from "react";
 import { IModelApp, IModelConnection } from "@itwin/core-frontend";
 import { Table } from "./TableGrid";
 import { UnifiedSelectionContextProvider } from "@itwin/presentation-components";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { ViewHelper } from "@itwin/measure-tools-react";
+import { Property } from "@itwin/ecschema-metadata";
 
-function RulesTable() {
-  const [iModel, setIModel] = React.useState<IModelConnection | undefined>(
-    undefined
-  );
+interface RulesTableProps {
+  properties: Property[];
+}
+
+function RulesTable({ properties }: RulesTableProps) {
+  const [iModel, setIModel] = React.useState<IModelConnection | undefined>(undefined);
 
   useEffect(() => {
     setIModel(IModelApp.viewManager.selectedView?.iModel);
@@ -21,15 +24,28 @@ function RulesTable() {
       </div>
     );
   }
+
   return (
     <ErrorBoundary FallbackComponent={ResetPage}>
       <UnifiedSelectionContextProvider imodel={iModel}>
-        <Table width={400} height={400} iModel={iModel} />
+        <Table
+          width={800} // Adjusted width for better visualization
+          height={600} // Adjusted height for better visualization
+          iModel={iModel}
+        />
       </UnifiedSelectionContextProvider>
     </ErrorBoundary>
   );
 }
+
 function ResetPage(props: { error: Error; resetErrorBoundary: () => void }) {
-  return <button onClick={props.resetErrorBoundary}> Refresh</button>;
+  return (
+    <div style={{ textAlign: 'center', padding: '20px' }}>
+      <p style={{ color: 'red' }}>Something went wrong. Please try refreshing the page.</p>
+      <button onClick={props.resetErrorBoundary}>Refresh</button>
+    </div>
+  );
 }
+
 export default RulesTable;
+
