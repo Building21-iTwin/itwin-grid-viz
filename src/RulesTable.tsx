@@ -21,6 +21,7 @@ function RulesTable() {
       </div>
     );
   }
+
   return (
     <ErrorBoundary FallbackComponent={ResetPage}>
       <UnifiedSelectionContextProvider imodel={iModel}>
