@@ -9,7 +9,7 @@ import RulesTable from "./RulesTable"
 
 export class BottomGridUIProvider implements UiItemsProvider {
   public readonly id = "BottomGridUIProvider";
-  static FC: any;
+  
  
   public provideWidgets(
     _stageId: string,
