@@ -27,9 +27,7 @@ export class BottomGridUIProvider implements UiItemsProvider {
         id: "BottomGrid",
         label: "Description Grid",
         content: (
-          <>
-          <RulesTable properties={[]}/>
-        </>
+          <RulesTable />
       ),
     };
     widgets.push(bottomGrid);

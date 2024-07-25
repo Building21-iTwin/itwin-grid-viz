@@ -6,11 +6,9 @@ import { useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Property } from "@itwin/ecschema-metadata";
 
-interface RulesTableProps {
-  properties: Property[];
-}
 
-function RulesTable({ properties }: RulesTableProps) {
+
+function RulesTable() {
   const [iModel, setIModel] = React.useState<IModelConnection | undefined>(undefined);
 
   useEffect(() => {
@@ -29,8 +27,8 @@ function RulesTable({ properties }: RulesTableProps) {
     <ErrorBoundary FallbackComponent={ResetPage}>
       <UnifiedSelectionContextProvider imodel={iModel}>
         <Table
-          width={800} // Adjusted width for better visualization
-          height={600} // Adjusted height for better visualization
+          width={800} 
+          height={600} 
           iModel={iModel}
         />
       </UnifiedSelectionContextProvider>
@@ -48,4 +46,3 @@ function ResetPage(props: { error: Error; resetErrorBoundary: () => void }) {
 }
 
 export default RulesTable;
-
