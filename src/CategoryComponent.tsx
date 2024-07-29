@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
 import { Presentation } from "@itwin/presentation-frontend";
 import { useContext } from "react";
-import { CategoryContext, CategoryContextType } from "./App";
+import { CategoryContext } from "./App";
 
 interface Category {
   label: string;
