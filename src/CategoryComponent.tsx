@@ -1,7 +1,9 @@
 import { IModelApp } from "@itwin/core-frontend";
-import React, { useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
 import { Presentation } from "@itwin/presentation-frontend";
+import { useContext } from "react";
+import { CategoryContext, CategoryContextType } from "./App";
 
 interface Category {
   label: string;
@@ -10,9 +12,8 @@ interface Category {
 
 export function CategoryComponent() {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
-    null
-  );
+  const { selectedCategoryId, setSelectedCategoryId } =
+    useContext(CategoryContext);
 
   useEffect(() => {
     const getCategories = async () => {
@@ -37,6 +38,7 @@ export function CategoryComponent() {
         QueryBinder.from([ids]),
         { rowFormat: QueryRowFormat.UseECSqlPropertyNames }
       );
+      console.log(selectedCategoryId);
       const elements = await queryReader.toArray();
       Presentation.selection.replaceSelection(
         "category",
@@ -54,7 +56,6 @@ export function CategoryComponent() {
   ) => {
     const categoryId = event.target.id;
     setSelectedCategoryId(categoryId);
-
     await selectCategory([categoryId]);
   };
 
