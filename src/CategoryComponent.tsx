@@ -1,5 +1,5 @@
 import { IModelApp } from "@itwin/core-frontend";
-import React, { createContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
 import { Presentation } from "@itwin/presentation-frontend";
 import { useContext } from "react";
