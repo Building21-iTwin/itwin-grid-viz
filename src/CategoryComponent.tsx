@@ -1,27 +1,32 @@
 import { IModelApp } from "@itwin/core-frontend";
-import React, { useEffect, useState } from "react";
-import { ColorDef, QueryBinder, QueryRowFormat } from "@itwin/core-common";
+import React, { FormEvent, useEffect, useState } from "react";
+import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
 import { Presentation } from "@itwin/presentation-frontend";
+import { Tooltip } from "@itwin/itwinui-react";
+import { SearchBox } from '@itwin/itwinui-react';
+import { Flex } from '@itwin/itwinui-react';
+
+
 
 interface Category {
+  [x: string]: any;
   label: string;
   id: string;
 }
+
+export default SearchBox;
 
 export function CategoryComponent() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
     null
   );
+  const [searchString, setSearchString] = useState<string> ("")
+
 
   useEffect(() => {
     const getCategories = async () => {
       const iModel = IModelApp.viewManager.selectedView?.iModel;
-      const viewport = IModelApp.viewManager.selectedView;
-      if (viewport) {
-        const newHilite = { ...viewport.hilite, color: ColorDef.red };
-        viewport.hilite = newHilite;
-      }
       if (iModel) {
         const queryReader = iModel.createQueryReader(
           "SELECT ECInstanceId, UserLabel FROM bis.SpatialCategory"
@@ -53,7 +58,10 @@ export function CategoryComponent() {
       );
     }
   }
-
+ 
+  
+                                                                                                                      
+ 
   const handleCategoryChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -62,9 +70,15 @@ export function CategoryComponent() {
 
     await selectCategory([categoryId]);
   };
-
-  const categoryElements = categories.map((category) => (
-    <li key={category.id}>
+  
+  let searchTextLower=searchString.toLowerCase() 
+  let filteredCategories = categories.filter ((category) => {
+    const categoryLower = category.label.toLowerCase();
+    return categoryLower.includes(searchTextLower);
+})
+  const categoryElements = filteredCategories.map((category) => (
+    <ul 
+    key={category.id}>
       <input
         type="radio"
         id={category.id}
@@ -72,13 +86,41 @@ export function CategoryComponent() {
         checked={selectedCategoryId === category.id}
         onChange={handleCategoryChange}
       />
-      <label htmlFor={category.id}>{category.label}</label>
-    </li>
+      <Tooltip content='Select category' placement='bottom'>
+      <label htmlFor={category.id}>{category.label}</label></Tooltip>
+  
+    </ul>
   ));
 
+  function searchInputChanged(event: any): void {
+    setSearchString( event.target.value)}
+
+ 
+ 
+
+
+
   return (
-    <div>
-      <ul>{categoryElements}</ul>
+    
+    <div className=''>
+    <SearchBox
+      aria-label='Search input'
+      inputProps={{
+        placeholder: 'Search category...',
+      }}
+      onChange={searchInputChanged}
+    />
+      
+    
+
+
+<Flex 
+gap="s"
+flexDirection="column" 
+ alignItems='left'>
+{categoryElements} 
+</Flex> 
     </div>
   );
 }
+
