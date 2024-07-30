@@ -33,18 +33,39 @@ import {
   ViewerPerformance,
   ViewerStatusbarItemsProvider,
 } from "@itwin/web-viewer-react";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useContext,
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import { Auth } from "./Auth";
 import { history } from "./history";
 import { LeftPanelUIProvider } from "./LeftPanelUIProvider";
 import { BottomGridUIProvider } from "./BottomGridUIProvider";
 
+export interface CategoryContextType {
+  selectedCategoryId: string | null;
+  setSelectedCategoryId: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+export const CategoryContext = createContext<CategoryContextType>({
+  selectedCategoryId: null,
+  setSelectedCategoryId: () => {},
+});
+
 const App: React.FC = () => {
   const [iModelId, setIModelId] = useState(process.env.IMJS_IMODEL_ID);
   const [iTwinId, setITwinId] = useState(process.env.IMJS_ITWIN_ID);
   const [changesetId, setChangesetId] = useState(
     process.env.IMJS_AUTH_CLIENT_CHANGESET_ID
+  );
+
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
+    null
   );
 
   const accessToken = useAccessToken();
@@ -139,57 +160,61 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="viewer-container">
-      {!accessToken && (
-        <FillCentered>
-          <div className="signin-content">
-            <ProgressLinear indeterminate={true} labels={["Signing in..."]} />
-          </div>
-        </FillCentered>
-      )}
+    <CategoryContext.Provider
+      value={{ selectedCategoryId, setSelectedCategoryId }}
+    >
+      <div className="viewer-container">
+        {!accessToken && (
+          <FillCentered>
+            <div className="signin-content">
+              <ProgressLinear indeterminate={true} labels={["Signing in..."]} />
+            </div>
+          </FillCentered>
+        )}
 
-      <Viewer
-        iTwinId={iTwinId ?? ""}
-        iModelId={iModelId ?? ""}
-        changeSetId={changesetId}
-        authClient={authClient}
-        viewCreatorOptions={viewCreatorOptions}
-        enablePerformanceMonitors={true} // see description in the README (https://www.npmjs.com/package/@itwin/web-viewer-react)
-        onIModelAppInit={onIModelAppInit}
-        uiProviders={[
-          new LeftPanelUIProvider(),
-          new BottomGridUIProvider(),
-          new ViewerNavigationToolsProvider(),
-          new ViewerContentToolsProvider({
-            vertical: {
-              measureGroup: false,
-            },
-          }),
-          new ViewerStatusbarItemsProvider(),
-          new TreeWidgetUiItemsProvider(),
-          new PropertyGridUiItemsProvider({
-            propertyGridProps: {
-              autoExpandChildCategories: true,
-              ancestorsNavigationControls: (props) => (
-                <AncestorsNavigationControls {...props} />
-              ),
-              contextMenuItems: [
-                (props) => <CopyPropertyTextContextMenuItem {...props} />,
-              ],
-              settingsMenuItems: [
-                (props) => (
-                  <ShowHideNullValuesSettingsMenuItem
-                    {...props}
-                    persist={true}
-                  />
+        <Viewer
+          iTwinId={iTwinId ?? ""}
+          iModelId={iModelId ?? ""}
+          changeSetId={changesetId}
+          authClient={authClient}
+          viewCreatorOptions={viewCreatorOptions}
+          enablePerformanceMonitors={true} // see description in the README (https://www.npmjs.com/package/@itwin/web-viewer-react)
+          onIModelAppInit={onIModelAppInit}
+          uiProviders={[
+            new LeftPanelUIProvider(),
+            new BottomGridUIProvider(),
+            new ViewerNavigationToolsProvider(),
+            new ViewerContentToolsProvider({
+              vertical: {
+                measureGroup: false,
+              },
+            }),
+            new ViewerStatusbarItemsProvider(),
+            new TreeWidgetUiItemsProvider(),
+            new PropertyGridUiItemsProvider({
+              propertyGridProps: {
+                autoExpandChildCategories: true,
+                ancestorsNavigationControls: (props) => (
+                  <AncestorsNavigationControls {...props} />
                 ),
-              ],
-            },
-          }),
-          new MeasureToolsUiItemsProvider(),
-        ]}
-      />
-    </div>
+                contextMenuItems: [
+                  (props) => <CopyPropertyTextContextMenuItem {...props} />,
+                ],
+                settingsMenuItems: [
+                  (props) => (
+                    <ShowHideNullValuesSettingsMenuItem
+                      {...props}
+                      persist={true}
+                    />
+                  ),
+                ],
+              },
+            }),
+            new MeasureToolsUiItemsProvider(),
+          ]}
+        />
+      </div>
+    </CategoryContext.Provider>
   );
 };
 
