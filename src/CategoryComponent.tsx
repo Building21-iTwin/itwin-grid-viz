@@ -2,6 +2,9 @@ import { IModelApp } from "@itwin/core-frontend";
 import React, { useEffect, useState } from "react";
 import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
 import { Presentation } from "@itwin/presentation-frontend";
+import { Tooltip } from "@itwin/itwinui-react";
+import { SearchBox } from "@itwin/itwinui-react";
+import { Flex } from "@itwin/itwinui-react";
 import { useContext } from "react";
 import { CategoryContext } from "./App";
 
@@ -14,6 +17,7 @@ export function CategoryComponent() {
   const [categories, setCategories] = useState<Category[]>([]);
   const { selectedCategoryId, setSelectedCategoryId } =
     useContext(CategoryContext);
+  const [searchString, setSearchString] = useState<string>("");
 
   useEffect(() => {
     const getCategories = async () => {
@@ -38,7 +42,6 @@ export function CategoryComponent() {
         QueryBinder.from([ids]),
         { rowFormat: QueryRowFormat.UseECSqlPropertyNames }
       );
-      console.log(selectedCategoryId);
       const elements = await queryReader.toArray();
       Presentation.selection.replaceSelection(
         "category",
@@ -59,8 +62,13 @@ export function CategoryComponent() {
     await selectCategory([categoryId]);
   };
 
-  const categoryElements = categories.map((category) => (
-    <li key={category.id}>
+  let searchTextLower = searchString.toLowerCase();
+  let filteredCategories = categories.filter((category) => {
+    const categoryLower = category.label.toLowerCase();
+    return categoryLower.includes(searchTextLower);
+  });
+  const categoryElements = filteredCategories.map((category) => (
+    <ul key={category.id}>
       <input
         type="radio"
         id={category.id}
@@ -68,13 +76,28 @@ export function CategoryComponent() {
         checked={selectedCategoryId === category.id}
         onChange={handleCategoryChange}
       />
-      <label htmlFor={category.id}>{category.label}</label>
-    </li>
+      <Tooltip content="Select category" placement="bottom">
+        <label htmlFor={category.id}>{category.label}</label>
+      </Tooltip>
+    </ul>
   ));
 
+  function searchInputChanged(event: any): void {
+    setSearchString(event.target.value);
+  }
+
   return (
-    <div>
-      <ul>{categoryElements}</ul>
+    <div className="">
+      <SearchBox
+        aria-label="Search input"
+        inputProps={{
+          placeholder: "Search category...",
+        }}
+        onChange={searchInputChanged}
+      />
+      <Flex gap="s" flexDirection="column" alignItems="left">
+        {categoryElements}
+      </Flex>
     </div>
   );
 }

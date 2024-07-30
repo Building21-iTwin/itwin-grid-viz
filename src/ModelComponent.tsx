@@ -53,7 +53,6 @@ export function ModelComponent() {
           QueryBinder.from([modelIds, [selectedCategoryId]]),
           { rowFormat: QueryRowFormat.UseECSqlPropertyNames }
         );
-        console.log(modelIds, [selectedCategoryId]);
         const elements = await queryReader.toArray();
         Presentation.selection.replaceSelection(
           "model",
