@@ -22,21 +22,15 @@ export class LeftPanelUIProvider implements UiItemsProvider {
       location === StagePanelLocation.Left &&
       section === StagePanelSection.Start
     ) {
-      const firstWidget: Widget = {
-        id: "FirstWidget",
-        label: "FirstWidget",
+      const categories: Widget = {
+        id: "Categories",
+        label: "Categories",
         content: <CategoryComponent />,
       };
-      widgets.push(firstWidget);
+      widgets.push(categories);
     }
-    {
-      const secondWidget: Widget = {
-        id: "SecondWidget",
-        label: "SecondtWidget",
-        content: <span>"SecondWidgetPlaceholder"</span>,
-      };
-      widgets.push(secondWidget);
-    }
+    
+      
 
     return widgets;
   }
