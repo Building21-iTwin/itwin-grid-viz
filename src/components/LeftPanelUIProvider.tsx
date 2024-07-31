@@ -7,6 +7,8 @@ import {
 } from "@itwin/appui-react";
 import { CategoryComponent } from "./CategoryComponent";
 import { ModelComponent } from "./ModelComponent";
+import TextBoxComponent from "./TextBoxComponent";
+
 
 export class LeftPanelUIProvider implements UiItemsProvider {
   public readonly id = "LeftPanelUIProvider";
@@ -42,6 +44,7 @@ export class LeftPanelUIProvider implements UiItemsProvider {
       const secondWidget: Widget = {
         id: "SQLComponent",
         label: "SQLComponent",
+        content: <TextBoxComponent errormessage={undefined} />
       };
       widgets.push(secondWidget);
     }
