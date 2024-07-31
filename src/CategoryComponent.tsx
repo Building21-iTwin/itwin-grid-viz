@@ -2,9 +2,7 @@ import { IModelApp } from "@itwin/core-frontend";
 import React, { useEffect, useState } from "react";
 import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
 import { Presentation } from "@itwin/presentation-frontend";
-import { Tooltip } from "@itwin/itwinui-react";
-import { SearchBox } from "@itwin/itwinui-react";
-import { Flex } from "@itwin/itwinui-react";
+import { Tooltip, Flex, SearchBox } from "@itwin/itwinui-react";
 import { useContext } from "react";
 import { CategoryContext } from "./App";
 
