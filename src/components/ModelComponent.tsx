@@ -2,7 +2,7 @@ import { IModelApp } from "@itwin/core-frontend";
 import React, { useContext, useEffect, useState } from "react";
 import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
 import { Presentation } from "@itwin/presentation-frontend";
-import { CategoryContext } from "./App";
+import { CategoryContext } from "../App";
 
 interface Model {
   label: string;

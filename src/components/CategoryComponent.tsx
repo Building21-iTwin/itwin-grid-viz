@@ -4,7 +4,7 @@ import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
 import { Presentation } from "@itwin/presentation-frontend";
 import { Tooltip, Flex, SearchBox } from "@itwin/itwinui-react";
 import { useContext } from "react";
-import { CategoryContext } from "./App";
+import { CategoryContext } from "../App";
 
 interface Category {
   label: string;

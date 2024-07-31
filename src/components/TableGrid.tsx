@@ -14,7 +14,7 @@ import {
   usePresentationTableWithUnifiedSelection,
 } from "@itwin/presentation-components";
 
-import { CenteredContent } from "./CenteredContent";
+import { CenteredContent } from "../CenteredContent";
 
 export interface TableProps {
   /** Width of the property grid element. */

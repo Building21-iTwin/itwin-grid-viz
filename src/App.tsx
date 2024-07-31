@@ -44,8 +44,8 @@ import React, {
 
 import { Auth } from "./Auth";
 import { history } from "./history";
-import { LeftPanelUIProvider } from "./LeftPanelUIProvider";
-import { BottomGridUIProvider } from "./BottomGridUIProvider";
+import { LeftPanelUIProvider } from "./components/LeftPanelUIProvider";
+import { BottomGridUIProvider } from "./components/BottomGridUIProvider";
 
 export interface CategoryContextType {
   selectedCategoryId: string | null;

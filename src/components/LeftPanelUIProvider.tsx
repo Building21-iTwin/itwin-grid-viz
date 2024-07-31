@@ -38,6 +38,13 @@ export class LeftPanelUIProvider implements UiItemsProvider {
       };
       widgets.push(secondWidget);
     }
+    {
+      const secondWidget: Widget = {
+        id: "SQLComponent",
+        label: "SQLComponent",
+      };
+      widgets.push(secondWidget);
+    }
 
     return widgets;
   }
