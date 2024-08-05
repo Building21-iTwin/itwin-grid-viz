@@ -77,12 +77,12 @@ export function Table(props: TableProps) {
       columns={columns}
       data={rows}
       enableVirtualization={true}
-      style={{ height: `${props.height}px` }}
       emptyTableContent={props.noRowsState?.() ?? <>No rows.</>}
       onBottomReached={loadMoreRows}
       isLoading={isLoading}
       density="extra-condensed"
       styleType="zebra-rows"
+      style={{ width: "100%", height: "100%" }}
     />
   );
 }
@@ -93,6 +93,7 @@ function mapColumns(columnDefinitions: TableColumnDefinition) {
     accessor: columnDefinitions.name,
     Header: columnDefinitions.label,
     Cell: cellRenderer,
+    width: 225,
   };
 }
 
