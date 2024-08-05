@@ -1,44 +1,58 @@
-import React, { useState } from "react";
-import { Button, Flex, LabeledTextarea } from "@itwin/itwinui-react";
+import * as React from "react";
+import { Button, LabeledTextarea } from "@itwin/itwinui-react";
+import { Flex } from "@itwin/itwinui-react";
+import { ColorDef } from "@itwin/core-common";
 
-export interface QueryProps {
+export interface Queryprops {
   id: number;
   enabled: boolean;
+  color: ColorDef;
   query: string;
   valid?: boolean;
-  errorMessage?: string;
+  errormessage?: string;
 }
 
 export interface QueryComponentProps {
-  props: QueryProps;
-  handleChange(newProps: QueryProps): void;
-  enterClick(id: number): void;
+  props: Queryprops;
+  handleChange(newProps: Queryprops): void;
+  removeClick(id: number): void;
 }
 
-const Querycompt = ({ props, enterClick }: QueryComponentProps) => {
-  const [query, setQuery] = useState(props.query);
+const Querycompt = ({ props, handleChange }: QueryComponentProps) => {
+  const [value, setvalue] = React.useState<string>(props.query);
+  const [checkBoxChecked, setCheckBoxChecked] = React.useState<boolean>(
+    props.enabled
+  );
+  const [color, setColor] = React.useState<ColorDef>(props.color);
 
-  const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setQuery(event.target.value);
-  };
+  function queryChanged(event: React.ChangeEvent<HTMLTextAreaElement>): void {
+    setvalue(event.target.value);
+    handleChange(props);
+    props.query = event.target.value;
+  }
 
-  const handleEnterClick = () => {
-    enterClick(props.id);
-  };
+  let s: undefined | "positive" | "negative" = undefined;
+  if (props.valid === true) {
+    s = "positive";
+  }
+  if (props.valid === false) {
+    s = "negative";
+  }
 
   return (
     <Flex style={{ padding: "5px", width: "100%" }}>
-      <Button styleType="default" onClick={handleEnterClick}>
-        Enter
-      </Button>
       <LabeledTextarea
-        label="SQL Code"
-        value={query}
-        onChange={handleQueryChange}
-        placeholder="Enter SQL code here"
+        id="text-area"
+        value={value}
+        onChange={queryChanged}
+        style={{ width: "100%" }}
+        disabled={!checkBoxChecked}
+        label={undefined}
+        status={s}
+        message={props.errormessage}
+        placeholder="Enter SQL here..."
       />
     </Flex>
   );
 };
-
 export default Querycompt;
