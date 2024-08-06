@@ -1,9 +1,9 @@
 import React from "react";
-import Querycompt, { Queryprops } from "./querycompt";
 import { ColorDef, QueryRowFormat } from "@itwin/core-common";
 import { IModelApp } from "@itwin/core-frontend";
 import { Presentation } from "@itwin/presentation-frontend";
 import { Button, Flex } from "@itwin/itwinui-react";
+import Querycompt, { Queryprops } from "./QueryCompt";
 
 export function QueriesComponent() {
   const [query, setQuery] = React.useState<Queryprops>({
