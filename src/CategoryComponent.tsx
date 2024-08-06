@@ -1,10 +1,11 @@
 import { IModelApp } from "@itwin/core-frontend";
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
 import { Presentation } from "@itwin/presentation-frontend";
 import { Tooltip } from "@itwin/itwinui-react";
 import { SearchBox } from '@itwin/itwinui-react';
 import { Flex } from '@itwin/itwinui-react';
+import Header from "@itwin/itwinui-react";
 
 
 
@@ -22,7 +23,9 @@ export function CategoryComponent() {
     null
   );
   const [searchString, setSearchString] = useState<string> ("")
+  
 
+    
 
   useEffect(() => {
     const getCategories = async () => {
@@ -60,8 +63,6 @@ export function CategoryComponent() {
   }
  
   
-                                                                                                                      
- 
   const handleCategoryChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -95,30 +96,28 @@ export function CategoryComponent() {
   function searchInputChanged(event: any): void {
     setSearchString( event.target.value)}
 
- 
- 
-
-
-
+    <header>
+      
+    </header>
+      
   return (
     
     <div className=''>
-    <SearchBox
-      aria-label='Search input'
-      inputProps={{
-        placeholder: 'Search category...',
-      }}
-      onChange={searchInputChanged}
-    />
-      
-    
+    <SearchBox className="SearchBox"
+    style={{position:"absolute", width:"90", left:"5px", right:"5px",top :"1px"}}
+    aria-label='Search input'
+    inputProps={{
+      placeholder: 'Search Categories...', 
+    }}
+    onChange={searchInputChanged}
+  />
+<></>
 
-
-<Flex 
-gap="s"
+<Flex
 flexDirection="column" 
+gap ='3x1'
  alignItems='left'>
-{categoryElements} 
+<body>{categoryElements}</body>
 </Flex> 
     </div>
   );

@@ -5,7 +5,9 @@ import {
   UiItemsProvider,
   Widget,
 } from "@itwin/appui-react";
-import { CategoryComponent } from "./CategoryComponent";
+import SearchBox, { CategoryComponent } from "./CategoryComponent";
+
+
 
 export class LeftPanelUIProvider implements UiItemsProvider {
   public readonly id = "LeftPanelUIProvider";
@@ -25,13 +27,17 @@ export class LeftPanelUIProvider implements UiItemsProvider {
       const categories: Widget = {
         id: "Categories",
         label: "Categories",
-        content: <CategoryComponent />,
+        content:<CategoryComponent />,
+        
       };
+    
+      
       widgets.push(categories);
     }
     
-      
+    <SearchBox inputProps={{ placeholder: 'SearchBox component' }} />
 
     return widgets;
   }
-}
+};
+
