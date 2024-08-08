@@ -19,7 +19,7 @@ export function ModelComponent() {
       const iModel = IModelApp.viewManager.selectedView?.iModel;
       if (iModel) {
         const queryReader = iModel.createQueryReader(
-          "SELECT m.ECInstanceId modelId, p.UserLabel modelName FROM bis.PhysicalModel m JOIN bis.PhysicalPartition p ON p.ECInstanceId = m.ModeledElement.Id"
+          "SELECT m.ECInstanceId modelId, COALESCE(p.UserLabel, CodeValue) FROM bis.PhysicalModel m JOIN bis.PhysicalPartition p ON p.ECInstanceId = m.ModeledElement.Id"
         );
         const cats = await queryReader.toArray();
         setModels(cats.map((cat) => ({ id: cat[0], label: cat[1] })));
