@@ -24,7 +24,7 @@ export function CategoryComponent() {
       const iModel = IModelApp.viewManager.selectedView?.iModel;
       if (iModel) {
         const queryReader = iModel.createQueryReader(
-          "SELECT ECInstanceId, UserLabel FROM bis.SpatialCategory"
+          "SELECT ECInstanceId, COALESCE(UserLabel, CodeValue) FROM bis.SpatialCategory"
         );
         const cats = await queryReader.toArray();
         setCategories(cats.map((cat) => ({ id: cat[0], label: cat[1] })));
