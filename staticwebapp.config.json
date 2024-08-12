@@ -3,5 +3,9 @@
         "Referrer-Policy":"strict-origin-when-cross-origin",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET, OPTIONS"
+    },
+    "navigationFallback": {
+        "rewrite": "index.html",
+        "exclude": ["/images/*.{png,jpg,gif,ico}", "/*.{css,scss,js}"]
     }
 }
