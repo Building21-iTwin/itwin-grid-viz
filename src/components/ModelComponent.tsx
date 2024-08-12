@@ -108,7 +108,7 @@ export function ModelComponent() {
   return (
     <div className=''>
     <SearchBox className="SearchBox"
-    style={{position:"sticky", width:"75", right:"10px"}}
+    style={{position:"sticky", width:"75", right:"10px", top: "1px"}}
     aria-label='Search input'
     inputProps={{
       placeholder: 'Search Models...', 

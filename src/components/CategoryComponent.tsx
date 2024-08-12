@@ -92,7 +92,7 @@ export function CategoryComponent() {
     
     <div className=''>
     <SearchBox className="SearchBox"
-    style={{position:"sticky", width:"75", right:"10px",top :"1px"}}
+    style={{position:"sticky", width:"75", right:"10px", top: "1px"}}
     aria-label='Search input'
     inputProps={{
       placeholder: 'Search Categories...', 
