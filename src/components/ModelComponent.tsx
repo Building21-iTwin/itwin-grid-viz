@@ -97,7 +97,13 @@ export function ModelComponent() {
     }
   };
 
-  const modelElements = models.map((model) => (
+  let searchTextLower = searchString.toLowerCase();
+  let filteredModels = models.filter((category) => {
+    const categoryLower = category.label.toLowerCase();
+    return categoryLower.includes(searchTextLower);
+  });
+
+  const modelElements = filteredModels.map((model) => (
     <li key={model.id}>
       <input
         type="checkbox"
@@ -106,7 +112,9 @@ export function ModelComponent() {
         checked={selectedModelIds.includes(model.id)}
         onChange={handleModelChange}
       />
-      <label htmlFor={model.id}>{model.label}</label>
+      <Tooltip content="Select Model" placement="bottom">
+        <label htmlFor={model.id}>{model.label}</label>
+      </Tooltip>
     </li>
   ));
 
