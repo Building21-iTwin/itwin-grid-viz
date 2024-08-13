@@ -3,6 +3,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
 import { Presentation } from "@itwin/presentation-frontend";
 import { Category_ModelContext } from "../App";
+import { SearchBox } from "@itwin/itwinui-react/cjs/core/SearchBox";
+import { Tooltip } from "@itwin/itwinui-react/cjs/core/Tooltip";
 
 interface Model {
   label: string;
@@ -17,6 +19,7 @@ export function ModelComponent() {
     selectedModelIds,
     setSelectedModelIds,
   } = useContext(Category_ModelContext);
+  const [searchString, setSearchString] = useState<string>("");
   const iModel = IModelApp.viewManager.selectedView?.iModel;
 
   useEffect(() => {
@@ -107,8 +110,22 @@ export function ModelComponent() {
     </li>
   ));
 
+  function searchInputChanged(event: any): void {
+    setSearchString(event.target.value);
+  }
+
   return (
-    <div>
+    <div className="">
+      <SearchBox
+        className="SearchBox"
+        style={{ position: "sticky", width: "75", right: "10px", top: "1px" }}
+        aria-label="Search input"
+        inputProps={{
+          placeholder: "Search Models...",
+        }}
+        onChange={searchInputChanged}
+      />
+
       <ul>{modelElements}</ul>
     </div>
   );
