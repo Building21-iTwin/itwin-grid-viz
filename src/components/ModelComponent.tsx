@@ -3,6 +3,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
 import { Presentation } from "@itwin/presentation-frontend";
 import { CategoryContext } from "../App";
+import { SearchBox } from "@itwin/itwinui-react/cjs/core/SearchBox";
+import { Tooltip } from "@itwin/itwinui-react/cjs/core/Tooltip";
+
 
 interface Model {
   label: string;
@@ -13,6 +16,7 @@ export function ModelComponent() {
   const [models, setModels] = useState<Model[]>([]);
   const [selectedModelId, setSelectedModelId] = useState<string | null>();
   const { selectedCategoryId } = useContext(CategoryContext);
+  const [searchString, setSearchString] = useState<string>("");
 
   useEffect(() => {
     const getModels = async () => {
@@ -77,8 +81,13 @@ export function ModelComponent() {
 
     await selectModel([modelId], [categoryId]);
   };
+  let searchTextLower = searchString.toLowerCase();
+  let filteredModels = models.filter((category) => {
+    const categoryLower = category.label.toLowerCase();
+    return categoryLower.includes(searchTextLower);
+  });
 
-  const modelElements = models.map((model) => (
+  const modelElements = filteredModels.map((model) => (
     <li key={model.id}>
       <input
         type="radio"
@@ -87,12 +96,25 @@ export function ModelComponent() {
         checked={selectedModelId === model.id}
         onChange={handleModelChange}
       />
+      <Tooltip content="Select Model" placement="bottom">
       <label htmlFor={model.id}>{model.label}</label>
+      </Tooltip>
     </li>
   ));
 
+  function searchInputChanged(event: any): void {
+    setSearchString( event.target.value)}
+
   return (
-    <div>
+    <div className=''>
+    <SearchBox className="SearchBox"
+    style={{position:"sticky", width:"75", right:"10px", top: "1px"}}
+    aria-label='Search input'
+    inputProps={{
+      placeholder: 'Search Models...', 
+    }}
+    onChange={searchInputChanged}/>
+
       <ul>{modelElements}</ul>
     </div>
   );
