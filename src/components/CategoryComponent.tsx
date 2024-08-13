@@ -30,8 +30,8 @@ export function CategoryComponent() {
         setCategories(cats.map((cat) => ({ id: cat[0], label: cat[1] })));
       }
     };
-
-    getCategories();
+    if (categories.length === 0)
+      getCategories();
   }, [categories]);
 
   async function selectCategory(ids: string[]) {
