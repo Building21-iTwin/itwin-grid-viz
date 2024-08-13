@@ -1,6 +1,10 @@
-import { IModelApp } from "@itwin/core-frontend";
+import {
+  EmphasizeElements,
+  IModelApp,
+  SelectionSetEvent,
+} from "@itwin/core-frontend";
 import React, { useEffect, useState } from "react";
-import { IModel, QueryBinder, QueryRowFormat } from "@itwin/core-common";
+import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
 import { Presentation } from "@itwin/presentation-frontend";
 import { Tooltip } from "@itwin/itwinui-react";
 import { SearchBox } from "@itwin/itwinui-react";
@@ -30,7 +34,20 @@ export function CategoryComponent() {
         setCategories(cats.map((cat) => ({ id: cat[0], label: cat[1] })));
       }
     };
-
+    const selectionListener = (args: SelectionSetEvent) => {
+      const view = IModelApp.viewManager.selectedView;
+      if (view) {
+        const emphasize = EmphasizeElements.getOrCreate(view);
+        emphasize.emphasizeSelectedElements(view);
+        emphasize.isolateSelectedElements(view, true, false);
+      }
+    };
+    const iModel = IModelApp.viewManager.selectedView!.iModel;
+    if (iModel) {
+      if (!iModel.selectionSet.onChanged.has(selectionListener)) {
+        iModel.selectionSet.onChanged.addListener(selectionListener);
+      }
+    }
     getCategories();
   }, [categories]);
 
