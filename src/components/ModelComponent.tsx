@@ -113,9 +113,8 @@ export function ModelComponent() {
     inputProps={{
       placeholder: 'Search Models...', 
     }}
-    onChange={searchInputChanged}
-  />
-<></>
+    onChange={searchInputChanged}/>
+
       <ul>{modelElements}</ul>
     </div>
   );
