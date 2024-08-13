@@ -32,8 +32,9 @@ export function ModelComponent() {
         setModels(cats.map((cat) => ({ id: cat[0], label: cat[1] })));
       }
     };
-
-    getModels();
+    if (models.length === 0) {
+      getModels();
+    }
   }, [models]);
 
   async function selectModel(modelIds: string[]) {

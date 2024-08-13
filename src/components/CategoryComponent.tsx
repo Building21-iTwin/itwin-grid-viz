@@ -48,7 +48,9 @@ export function CategoryComponent() {
         iModel.selectionSet.onChanged.addListener(selectionListener);
       }
     }
-    getCategories();
+    if (categories.length === 0) {
+      getCategories();
+    }
   }, [categories]);
 
   async function selectCategory(ids: string[]) {
