@@ -46,9 +46,6 @@ export function CategoryComponent() {
     const selectionListener = (args: SelectionSetEvent) => {
       const view = IModelApp.viewManager.selectedView;
       if (view) {
-        const emphasize = EmphasizeElements.getOrCreate(view);
-        emphasize.emphasizeSelectedElements(view);
-        emphasize.isolateSelectedElements(view, true, false);
         if (view) {
           const emphasize = EmphasizeElements.getOrCreate(view);
           const appearance = emphasize
