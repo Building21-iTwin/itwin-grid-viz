@@ -49,6 +49,13 @@ export function CategoryComponent() {
         const emphasize = EmphasizeElements.getOrCreate(view);
         emphasize.emphasizeSelectedElements(view);
         emphasize.isolateSelectedElements(view, true, false);
+        if (view) {
+          const emphasize = EmphasizeElements.getOrCreate(view);
+          const appearance = emphasize
+            .createDefaultAppearance()
+            .clone({ nonLocatable: undefined });
+          emphasize.emphasizeSelectedElements(view, appearance, true, false);
+        }
       }
     };
     const iModel = IModelApp.viewManager.selectedView!.iModel;
