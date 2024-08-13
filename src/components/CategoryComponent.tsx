@@ -1,12 +1,25 @@
-import { IModelApp } from "@itwin/core-frontend";
+import {
+  EmphasizeElements,
+  IModelApp,
+  SelectionSetEvent,
+} from "@itwin/core-frontend";
 import React, { useEffect, useState } from "react";
-import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
-import { Presentation } from "@itwin/presentation-frontend";
+import {
+  FeatureAppearance,
+  QueryBinder,
+  QueryRowFormat,
+} from "@itwin/core-common";
+import {
+  ISelectionProvider,
+  Presentation,
+  SelectionChangeEventArgs,
+} from "@itwin/presentation-frontend";
 import { Tooltip } from "@itwin/itwinui-react";
-import { SearchBox } from '@itwin/itwinui-react';
-import { Flex } from '@itwin/itwinui-react';
+import { SearchBox } from "@itwin/itwinui-react";
+import { Flex } from "@itwin/itwinui-react";
 import { useContext } from "react";
 import { CategoryContext } from "../App";
+import { HideIsolateEmphasizeAction } from "@itwin/appui-react";
 
 interface Category {
   label: string;
@@ -30,8 +43,21 @@ export function CategoryComponent() {
         setCategories(cats.map((cat) => ({ id: cat[0], label: cat[1] })));
       }
     };
-    if (categories.length === 0)
-      getCategories();
+    const selectionListener = (args: SelectionSetEvent) => {
+      const view = IModelApp.viewManager.selectedView;
+      if (view) {
+        const emphasize = EmphasizeElements.getOrCreate(view);
+        emphasize.emphasizeSelectedElements(view);
+        emphasize.isolateSelectedElements(view, true, false);
+      }
+    };
+    const iModel = IModelApp.viewManager.selectedView!.iModel;
+    if (iModel) {
+      if (!iModel.selectionSet.onChanged.has(selectionListener)) {
+        iModel.selectionSet.onChanged.addListener(selectionListener);
+      }
+    }
+    getCategories();
   }, [categories]);
 
   async function selectCategory(ids: string[]) {
@@ -82,31 +108,26 @@ export function CategoryComponent() {
   ));
 
   function searchInputChanged(event: any): void {
-    setSearchString( event.target.value)}
+    setSearchString(event.target.value);
+  }
 
-    <header>
-      
-    </header>
-      
+  <header></header>;
+
   return (
-    
-    <div className=''>
-    <SearchBox className="SearchBox"
-    style={{position:"sticky", width:"75", right:"10px",top:"1px"}}
-    aria-label='Search input'
-    inputProps={{
-      placeholder: 'Search Categories...', 
-    }}
-    onChange={searchInputChanged}
-  />
+    <div className="">
+      <SearchBox
+        className="SearchBox"
+        style={{ position: "sticky", width: "75", right: "10px", top: "1px" }}
+        aria-label="Search input"
+        inputProps={{
+          placeholder: "Search Categories...",
+        }}
+        onChange={searchInputChanged}
+      />
 
-
-<Flex
-flexDirection="column" 
-gap ='3x1'
- alignItems='left'>
-<body>{categoryElements}</body>
-</Flex> 
+      <Flex flexDirection="column" gap="3x1" alignItems="left">
+        <body>{categoryElements}</body>
+      </Flex>
     </div>
   );
 }
