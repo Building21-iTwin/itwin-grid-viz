@@ -2,7 +2,7 @@ import { IModelApp } from "@itwin/core-frontend";
 import React, { useContext, useEffect, useState } from "react";
 import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
 import { Presentation } from "@itwin/presentation-frontend";
-import { CategoryContext } from "../App";
+import { Category_ModelContext } from "../App";
 
 interface Model {
   label: string;
@@ -11,12 +11,16 @@ interface Model {
 
 export function ModelComponent() {
   const [models, setModels] = useState<Model[]>([]);
-  const [selectedModelId, setSelectedModelId] = useState<string | null>();
-  const { selectedCategoryId } = useContext(CategoryContext);
+  const {
+    querySelectionContext,
+    selectedCategoryIds,
+    selectedModelIds,
+    setSelectedModelIds,
+  } = useContext(Category_ModelContext);
+  const iModel = IModelApp.viewManager.selectedView?.iModel;
 
   useEffect(() => {
     const getModels = async () => {
-      const iModel = IModelApp.viewManager.selectedView?.iModel;
       if (iModel) {
         const queryReader = iModel.createQueryReader(
           "SELECT m.ECInstanceId modelId, COALESCE(p.UserLabel, CodeValue) FROM bis.PhysicalModel m JOIN bis.PhysicalPartition p ON p.ECInstanceId = m.ModeledElement.Id"
@@ -29,12 +33,11 @@ export function ModelComponent() {
     getModels();
   }, [models]);
 
-  async function selectModel(modelIds: string[], _categoryIds: string[]) {
-    const iModel = IModelApp.viewManager.selectedView?.iModel;
+  async function selectModel(modelIds: string[]) {
     if (iModel) {
-      if (selectedCategoryId === null) {
+      if (selectedCategoryIds.length === 0) {
         const queryReader = iModel.createQueryReader(
-          "SELECT ec_classname(ECClassId, 's:c') as [classname], ECInstanceId as [id] FROM bis.GeometricElement3d WHERE InVirtualSet(?, Model.Id)",
+          querySelectionContext + "(?, Model.Id)",
           QueryBinder.from([modelIds]),
           { rowFormat: QueryRowFormat.UseECSqlPropertyNames }
         );
@@ -49,8 +52,9 @@ export function ModelComponent() {
         );
       } else {
         const queryReader = iModel.createQueryReader(
-          "SELECT ec_classname(ECClassId, 's:c') as [classname], ECInstanceId as [id] FROM bis.GeometricElement3d WHERE InVirtualSet(?, Model.Id) AND InVirtualSet(?, Category.Id)",
-          QueryBinder.from([modelIds, [selectedCategoryId]]),
+          querySelectionContext +
+            "(?, Model.Id) AND InVirtualSet(?, Category.Id)",
+          QueryBinder.from([modelIds, [selectedCategoryIds]]),
           { rowFormat: QueryRowFormat.UseECSqlPropertyNames }
         );
         const elements = await queryReader.toArray();
@@ -69,22 +73,34 @@ export function ModelComponent() {
   const handleModelChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const modelId = event.target.id;
-    const categoryId = event.target.id;
+    const modelIds = event.target.id;
 
-    setSelectedModelId(modelId);
-    setSelectedModelId(categoryId);
+    if (iModel) {
+      const isSelected = selectedModelIds.includes(modelIds);
+      const newSelectedIds = isSelected
+        ? selectedModelIds.filter((id) => id !== modelIds)
+        : [...selectedModelIds, modelIds];
 
-    await selectModel([modelId], [categoryId]);
+      if (newSelectedIds.length > 0) {
+        setSelectedModelIds(newSelectedIds);
+        if (isSelected) {
+          Presentation.selection.clearSelection("model", iModel, 0);
+        }
+        await selectModel(newSelectedIds);
+      } else {
+        setSelectedModelIds([]);
+        Presentation.selection.clearSelection("model", iModel, 0);
+      }
+    }
   };
 
   const modelElements = models.map((model) => (
     <li key={model.id}>
       <input
-        type="radio"
+        type="checkbox"
         id={model.id}
         name="model"
-        checked={selectedModelId === model.id}
+        checked={selectedModelIds.includes(model.id)}
         onChange={handleModelChange}
       />
       <label htmlFor={model.id}>{model.label}</label>

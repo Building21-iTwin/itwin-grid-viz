@@ -9,9 +9,6 @@ import { CategoryComponent } from "./CategoryComponent";
 import { ModelComponent } from "./ModelComponent";
 import { QueriesComponent } from "./QueriesComponent";
 
-
-
-
 export class LeftPanelUIProvider implements UiItemsProvider {
   public readonly id = "LeftPanelUIProvider";
 
@@ -51,5 +48,4 @@ export class LeftPanelUIProvider implements UiItemsProvider {
 
     return widgets;
   }
-};
-
+}

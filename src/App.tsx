@@ -47,14 +47,20 @@ import { history } from "./history";
 import { LeftPanelUIProvider } from "./components/LeftPanelUIProvider";
 import { BottomGridUIProvider } from "./components/BottomGridUIProvider";
 
-export interface CategoryContextType {
-  selectedCategoryId: string | null;
-  setSelectedCategoryId: React.Dispatch<React.SetStateAction<string | null>>;
+export interface Category_ModelContextType {
+  selectedModelIds: string[];
+  setSelectedModelIds: (ids: string[]) => void;
+  selectedCategoryIds: string[];
+  setSelectedCategoryIds: (ids: string[]) => void;
+  querySelectionContext: string;
 }
 
-export const CategoryContext = createContext<CategoryContextType>({
-  selectedCategoryId: null,
-  setSelectedCategoryId: () => {},
+export const Category_ModelContext = createContext<Category_ModelContextType>({
+  selectedModelIds: [],
+  setSelectedModelIds: () => {},
+  selectedCategoryIds: [],
+  setSelectedCategoryIds: () => {},
+  querySelectionContext: "",
 });
 
 const App: React.FC = () => {
@@ -64,9 +70,10 @@ const App: React.FC = () => {
     process.env.IMJS_AUTH_CLIENT_CHANGESET_ID
   );
 
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
-    null
-  );
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
+  const [selectedModelIds, setSelectedModelIds] = useState<string[]>([]);
+  const querySelectionContext =
+    "SELECT ec_classname(ECClassId, 's:c') as [classname], ECInstanceId as [id] FROM bis.GeometricElement3d WHERE InVirtualSet";
 
   const accessToken = useAccessToken();
 
@@ -160,8 +167,14 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <CategoryContext.Provider
-      value={{ selectedCategoryId, setSelectedCategoryId }}
+    <Category_ModelContext.Provider
+      value={{
+        querySelectionContext,
+        selectedCategoryIds,
+        setSelectedCategoryIds,
+        selectedModelIds,
+        setSelectedModelIds,
+      }}
     >
       <div className="viewer-container">
         {!accessToken && (
@@ -214,7 +227,7 @@ const App: React.FC = () => {
           ]}
         />
       </div>
-    </CategoryContext.Provider>
+    </Category_ModelContext.Provider>
   );
 };
 
