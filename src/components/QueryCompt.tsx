@@ -20,10 +20,6 @@ export interface QueryComponentProps {
 
 const Querycompt = ({ props, handleChange }: QueryComponentProps) => {
   const [value, setvalue] = React.useState<string>(props.query);
-  const [checkBoxChecked, setCheckBoxChecked] = React.useState<boolean>(
-    props.enabled
-  );
-  const [color, setColor] = React.useState<ColorDef>(props.color);
 
   function queryChanged(event: React.ChangeEvent<HTMLTextAreaElement>): void {
     setvalue(event.target.value);
@@ -46,7 +42,6 @@ const Querycompt = ({ props, handleChange }: QueryComponentProps) => {
         value={value}
         onChange={queryChanged}
         style={{ width: "100%" }}
-        disabled={!checkBoxChecked}
         label={undefined}
         status={s}
         message={props.errormessage}

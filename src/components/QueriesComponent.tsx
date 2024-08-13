@@ -24,18 +24,26 @@ export function QueriesComponent() {
   async function selectElements(query: Queryprops) {
     const iModel = IModelApp.viewManager.selectedView?.iModel;
     if (iModel) {
-      const queryReader = iModel.createQueryReader(query.query, undefined, {
-        rowFormat: QueryRowFormat.UseECSqlPropertyNames,
-      });
-      const elements = await queryReader.toArray();
-      Presentation.selection.replaceSelection(
-        "category",
-        iModel,
-        elements.map((element) => ({
-          id: element.id,
-          className: element.classname,
-        }))
-      );
+      try {
+        const queryReader = iModel.createQueryReader(
+          `SELECT [ECInstanceId] [id], ec_classname([ECClassId]) [classname] FROM [bis].[GeometricElement3d] WHERE [ECInstanceId] IN (${query.query})`, undefined, {
+          rowFormat: QueryRowFormat.UseJsPropertyNames,
+        });
+        const elements = await queryReader.toArray();
+        Presentation.selection.replaceSelection(
+          "category",
+          iModel,
+          elements.map((element) => ({
+            id: element.id,
+            className: element.classname,
+          }))
+        );
+        const newQuery = { ...query, valid: true, errormessage: "" };
+        setQuery(newQuery);
+      } catch (e: any) {
+        const newQuery = { ...query, valid: false, errormessage: e.message };
+        setQuery(newQuery);
+      }
     }
   }
 
@@ -46,16 +54,16 @@ export function QueriesComponent() {
   return (
     <div>
       <Flex style={{ padding: "20px", width: "100%", height: "10px" }}>
-        <h2>Enter Query</h2>
+        <h2>Enter Query that returns only ECInstanceIds</h2>
       </Flex>
-      <Flex style={{ padding: "5px", width: "100%" }}>
+      <Flex flexDirection="column" style={{ padding: "5px", width: "100%" }}>
         <Querycompt
           key={query.id}
           props={query}
           handleChange={queryChanged}
           removeClick={removedclick}
         />
-        <Button onClick={selectClicked}>Enter</Button>
+        <Button onClick={selectClicked}>Run</Button>
       </Flex>
     </div>
   );
