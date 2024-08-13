@@ -2,7 +2,7 @@ import { IModelApp } from "@itwin/core-frontend";
 import React, { useContext, useEffect, useState } from "react";
 import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
 import { Presentation } from "@itwin/presentation-frontend";
-import { Category_ModelContext } from "../App";
+import { CategoryModelContext } from "../App";
 import { SearchBox } from "@itwin/itwinui-react/cjs/core/SearchBox";
 import { Tooltip } from "@itwin/itwinui-react/cjs/core/Tooltip";
 
@@ -13,12 +13,8 @@ interface Model {
 
 export function ModelComponent() {
   const [models, setModels] = useState<Model[]>([]);
-  const {
-    querySelectionContext,
-    selectedCategoryIds,
-    selectedModelIds,
-    setSelectedModelIds,
-  } = useContext(Category_ModelContext);
+  const { selectedModelIds, setSelectedModelIds } =
+    useContext(CategoryModelContext);
   const [searchString, setSearchString] = useState<string>("");
   const iModel = IModelApp.viewManager.selectedView?.iModel;
 
@@ -36,43 +32,6 @@ export function ModelComponent() {
     getModels();
   }, [models]);
 
-  async function selectModel(modelIds: string[]) {
-    if (iModel) {
-      if (selectedCategoryIds.length === 0) {
-        const queryReader = iModel.createQueryReader(
-          querySelectionContext + "(?, Model.Id)",
-          QueryBinder.from([modelIds]),
-          { rowFormat: QueryRowFormat.UseECSqlPropertyNames }
-        );
-        const elements = await queryReader.toArray();
-        Presentation.selection.replaceSelection(
-          "model",
-          iModel,
-          elements.map((element) => ({
-            id: element.id,
-            className: element.classname,
-          }))
-        );
-      } else {
-        const queryReader = iModel.createQueryReader(
-          querySelectionContext +
-            "(?, Model.Id) AND InVirtualSet(?, Category.Id)",
-          QueryBinder.from([modelIds, [selectedCategoryIds]]),
-          { rowFormat: QueryRowFormat.UseECSqlPropertyNames }
-        );
-        const elements = await queryReader.toArray();
-        Presentation.selection.replaceSelection(
-          "model",
-          iModel,
-          elements.map((element) => ({
-            id: element.id,
-            className: element.classname,
-          }))
-        );
-      }
-    }
-  }
-
   const handleModelChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -84,16 +43,7 @@ export function ModelComponent() {
         ? selectedModelIds.filter((id) => id !== modelIds)
         : [...selectedModelIds, modelIds];
 
-      if (newSelectedIds.length > 0) {
-        setSelectedModelIds(newSelectedIds);
-        if (isSelected) {
-          Presentation.selection.clearSelection("model", iModel, 0);
-        }
-        await selectModel(newSelectedIds);
-      } else {
-        setSelectedModelIds([]);
-        Presentation.selection.clearSelection("model", iModel, 0);
-      }
+      setSelectedModelIds(newSelectedIds);
     }
   };
 

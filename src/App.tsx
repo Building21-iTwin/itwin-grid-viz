@@ -46,8 +46,10 @@ import { Auth } from "./Auth";
 import { history } from "./history";
 import { LeftPanelUIProvider } from "./components/LeftPanelUIProvider";
 import { BottomGridUIProvider } from "./components/BottomGridUIProvider";
+import { IModel, QueryBinder, QueryRowFormat } from "@itwin/core-common";
+import { Presentation } from "@itwin/presentation-frontend";
 
-export interface Category_ModelContextType {
+export interface CategoryModelContextType {
   selectedModelIds: string[];
   setSelectedModelIds: (ids: string[]) => void;
   selectedCategoryIds: string[];
@@ -55,7 +57,7 @@ export interface Category_ModelContextType {
   querySelectionContext: string;
 }
 
-export const Category_ModelContext = createContext<Category_ModelContextType>({
+export const CategoryModelContext = createContext<CategoryModelContextType>({
   selectedModelIds: [],
   setSelectedModelIds: () => {},
   selectedCategoryIds: [],
@@ -73,7 +75,7 @@ const App: React.FC = () => {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
   const [selectedModelIds, setSelectedModelIds] = useState<string[]>([]);
   const querySelectionContext =
-    "SELECT ec_classname(ECClassId, 's:c') as [classname], ECInstanceId as [id] FROM bis.GeometricElement3d WHERE InVirtualSet";
+    "SELECT ec_classname(ECClassId, 's:c') as [classname], ECInstanceId as [id] FROM bis.GeometricElement3d WHERE ";
 
   const accessToken = useAccessToken();
 
@@ -166,14 +168,63 @@ const App: React.FC = () => {
     MeasurementActionToolbar.setDefaultActionProvider();
   }, []);
 
+  const categoryModelSelection = async (
+    categoryIds: string[],
+    modelIds: string[]
+  ) => {
+    const iModel = IModelApp.viewManager.selectedView?.iModel;
+    let queryParams: any = {};
+    if (iModel) {
+      let query = querySelectionContext;
+      if (categoryIds.length === 0 && modelIds.length === 0) {
+        Presentation.selection.clearSelection("category/model", iModel, 0);
+        return;
+      } else if (categoryIds.length > 0 && modelIds.length > 0) {
+        query += "InVirtualSet(?, Category.Id) AND InVirtualSet(?, Model.Id)";
+        queryParams = [categoryIds, modelIds];
+      } else if (modelIds.length > 0) {
+        query += "InVirtualSet(?, Model.Id)";
+        queryParams = [modelIds];
+      } else if (categoryIds.length > 0) {
+        query += "InVirtualSet(?, Category.Id)";
+        queryParams = [categoryIds];
+      }
+
+      const queryReader = iModel.createQueryReader(
+        query,
+        QueryBinder.from(queryParams),
+        { rowFormat: QueryRowFormat.UseECSqlPropertyNames }
+      );
+      const elements = await queryReader.toArray();
+      Presentation.selection.replaceSelection(
+        "category/model",
+        iModel,
+        elements.map((element) => ({
+          id: element.id,
+          className: element.classname,
+        }))
+      );
+    }
+  };
+
+  const categoryIdsChanged = (ids: string[]) => {
+    setSelectedCategoryIds(ids);
+    categoryModelSelection(ids, selectedModelIds);
+  };
+
+  const modelIdsChanged = (ids: string[]) => {
+    setSelectedModelIds(ids);
+    categoryModelSelection(selectedCategoryIds, ids);
+  };
+
   return (
-    <Category_ModelContext.Provider
+    <CategoryModelContext.Provider
       value={{
         querySelectionContext,
         selectedCategoryIds,
-        setSelectedCategoryIds,
+        setSelectedCategoryIds: categoryIdsChanged,
         selectedModelIds,
-        setSelectedModelIds,
+        setSelectedModelIds: modelIdsChanged,
       }}
     >
       <div className="viewer-container">
@@ -227,7 +278,7 @@ const App: React.FC = () => {
           ]}
         />
       </div>
-    </Category_ModelContext.Provider>
+    </CategoryModelContext.Provider>
   );
 };
 
