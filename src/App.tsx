@@ -6,7 +6,12 @@
 import "./App.scss";
 
 import type { ScreenViewport } from "@itwin/core-frontend";
-import { FitViewTool, IModelApp, StandardViewId } from "@itwin/core-frontend";
+import {
+  EmphasizeElements,
+  FitViewTool,
+  IModelApp,
+  StandardViewId,
+} from "@itwin/core-frontend";
 import { FillCentered } from "@itwin/core-react";
 import { ProgressLinear } from "@itwin/itwinui-react";
 import {
@@ -178,6 +183,10 @@ const App: React.FC = () => {
       let query = querySelectionContext;
       if (categoryIds.length === 0 && modelIds.length === 0) {
         Presentation.selection.clearSelection("category/model", iModel, 0);
+        const emphasize = EmphasizeElements.getOrCreate(
+          IModelApp.viewManager.selectedView!
+        );
+        emphasize.clearEmphasizedElements(IModelApp.viewManager.selectedView!);
         return;
       } else if (categoryIds.length > 0 && modelIds.length > 0) {
         query += "InVirtualSet(?, Category.Id) AND InVirtualSet(?, Model.Id)";
