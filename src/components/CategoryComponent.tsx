@@ -10,7 +10,7 @@ import { Tooltip } from "@itwin/itwinui-react";
 import { SearchBox } from "@itwin/itwinui-react";
 import { Flex } from "@itwin/itwinui-react";
 import { useContext } from "react";
-import { Category_ModelContext } from "../App";
+import { CategoryModelContext } from "../App";
 
 interface Category {
   label: string;
@@ -19,8 +19,8 @@ interface Category {
 
 export function CategoryComponent() {
   const [categories, setCategories] = useState<Category[]>([]);
-  const { querySelectionContext, selectedCategoryIds, setSelectedCategoryIds } =
-    useContext(Category_ModelContext);
+  const { selectedCategoryIds, setSelectedCategoryIds } =
+    useContext(CategoryModelContext);
   const [searchString, setSearchString] = useState<string>("");
   const iModel = IModelApp.viewManager.selectedView?.iModel;
 
@@ -34,7 +34,7 @@ export function CategoryComponent() {
         setCategories(cats.map((cat) => ({ id: cat[0], label: cat[1] })));
       }
     };
-    const selectionListener = (args: SelectionSetEvent) => {
+    const selectionListener = () => {
       const view = IModelApp.viewManager.selectedView;
       if (view) {
         if (view) {
@@ -57,25 +57,6 @@ export function CategoryComponent() {
     }
   }, [categories]);
 
-  async function selectCategory(ids: string[]) {
-    if (iModel) {
-      const queryReader = iModel.createQueryReader(
-        querySelectionContext + "(?, Category.Id)",
-        QueryBinder.from([ids]),
-        { rowFormat: QueryRowFormat.UseECSqlPropertyNames }
-      );
-      const elements = await queryReader.toArray();
-      Presentation.selection.replaceSelection(
-        "category",
-        iModel,
-        elements.map((element) => ({
-          id: element.id,
-          className: element.classname,
-        }))
-      );
-    }
-  }
-
   const handleCategoryChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -86,12 +67,6 @@ export function CategoryComponent() {
         : [...selectedCategoryIds, categoryIds];
 
       setSelectedCategoryIds(newSelectedIds);
-      Presentation.selection.clearSelection(categoryIds, iModel, 0);
-      if (newSelectedIds.length > 0) {
-        await selectCategory(newSelectedIds);
-      } else {
-        Presentation.selection.clearSelection("category", iModel, 0);
-      }
     }
   };
 
