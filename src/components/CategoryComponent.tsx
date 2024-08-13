@@ -4,22 +4,13 @@ import {
   SelectionSetEvent,
 } from "@itwin/core-frontend";
 import React, { useEffect, useState } from "react";
-import {
-  FeatureAppearance,
-  QueryBinder,
-  QueryRowFormat,
-} from "@itwin/core-common";
-import {
-  ISelectionProvider,
-  Presentation,
-  SelectionChangeEventArgs,
-} from "@itwin/presentation-frontend";
+import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
+import { Presentation } from "@itwin/presentation-frontend";
 import { Tooltip } from "@itwin/itwinui-react";
 import { SearchBox } from "@itwin/itwinui-react";
 import { Flex } from "@itwin/itwinui-react";
 import { useContext } from "react";
-import { CategoryContext } from "../App";
-import { HideIsolateEmphasizeAction } from "@itwin/appui-react";
+import { Category_ModelContext } from "../App";
 
 interface Category {
   label: string;
@@ -28,13 +19,13 @@ interface Category {
 
 export function CategoryComponent() {
   const [categories, setCategories] = useState<Category[]>([]);
-  const { selectedCategoryId, setSelectedCategoryId } =
-    useContext(CategoryContext);
+  const { querySelectionContext, selectedCategoryIds, setSelectedCategoryIds } =
+    useContext(Category_ModelContext);
   const [searchString, setSearchString] = useState<string>("");
+  const iModel = IModelApp.viewManager.selectedView?.iModel;
 
   useEffect(() => {
     const getCategories = async () => {
-      const iModel = IModelApp.viewManager.selectedView?.iModel;
       if (iModel) {
         const queryReader = iModel.createQueryReader(
           "SELECT ECInstanceId, COALESCE(UserLabel, CodeValue) FROM bis.SpatialCategory"
@@ -61,10 +52,9 @@ export function CategoryComponent() {
   }, [categories]);
 
   async function selectCategory(ids: string[]) {
-    const iModel = IModelApp.viewManager.selectedView?.iModel;
     if (iModel) {
       const queryReader = iModel.createQueryReader(
-        "SELECT ec_classname(ECClassId, 's:c') as [classname], ECInstanceId as [id] FROM bis.GeometricElement3d WHERE InVirtualSet(?, Category.Id)",
+        querySelectionContext + "(?, Category.Id)",
         QueryBinder.from([ids]),
         { rowFormat: QueryRowFormat.UseECSqlPropertyNames }
       );
@@ -79,12 +69,24 @@ export function CategoryComponent() {
       );
     }
   }
+
   const handleCategoryChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const categoryId = event.target.id;
-    setSelectedCategoryId(categoryId);
-    await selectCategory([categoryId]);
+    const categoryIds = event.target.id;
+    if (iModel) {
+      const newSelectedIds = selectedCategoryIds.includes(categoryIds)
+        ? selectedCategoryIds.filter((id) => id !== categoryIds)
+        : [...selectedCategoryIds, categoryIds];
+
+      setSelectedCategoryIds(newSelectedIds);
+      Presentation.selection.clearSelection(categoryIds, iModel, 0);
+      if (newSelectedIds.length > 0) {
+        await selectCategory(newSelectedIds);
+      } else {
+        Presentation.selection.clearSelection("category", iModel, 0);
+      }
+    }
   };
 
   let searchTextLower = searchString.toLowerCase();
@@ -95,10 +97,10 @@ export function CategoryComponent() {
   const categoryElements = filteredCategories.map((category) => (
     <ul key={category.id}>
       <input
-        type="radio"
+        type="checkbox"
         id={category.id}
         name="category"
-        checked={selectedCategoryId === category.id}
+        checked={selectedCategoryIds.includes(category.id)}
         onChange={handleCategoryChange}
       />
       <Tooltip content="Select category" placement="bottom">
