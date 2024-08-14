@@ -56,7 +56,7 @@ export function ModelComponent() {
   });
 
   const modelElements = filteredModels.map((model) => (
-    <li key={model.id}>
+    <ul key={model.id}>
       <input
         type="checkbox"
         id={model.id}
@@ -67,7 +67,7 @@ export function ModelComponent() {
       <Tooltip content="Select Model" placement="bottom">
         <label htmlFor={model.id}>{model.label}</label>
       </Tooltip>
-    </li>
+    </ul>
   ));
 
   function searchInputChanged(event: any): void {
@@ -89,9 +89,11 @@ export function ModelComponent() {
           placeholder: "Search Models...",
         }}
         onChange={searchInputChanged}
-      /> <Button onClick={ClearBoxes}>Clear</Button>
+      />
+    <Button onClick={ClearBoxes}>Clear</Button>
+    <Flex flexDirection="column" gap="3x1" alignItems="left">
+      <body>{modelElements}</body>
     </Flex>
-      <ul>{modelElements}</ul>
-    </div>
+  </div>
   );
 }

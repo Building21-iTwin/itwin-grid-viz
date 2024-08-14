@@ -92,7 +92,7 @@ export function CategoryComponent() {
 
   function searchInputChanged(event: any): void {
     setSearchString(event.target.value);
-  }
+  } 
 
   function ClearBoxes(): void {
     setSelectedCategoryIds([])
