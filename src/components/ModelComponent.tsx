@@ -80,8 +80,8 @@ export function ModelComponent() {
 
   return (
     <div className="">
-      <Flex
-      style={{position: "sticky"}}> <SearchBox
+      <Flex style={{position: "absolute", width:"98%", padding: "5px"}}>
+        <SearchBox
         className="SearchBox"
         style={{ position: "sticky", width: "75", right: "10px", top: "1px" }}
         aria-label="Search input"
@@ -90,11 +90,11 @@ export function ModelComponent() {
         }}
         onChange={searchInputChanged}
       />
-    <Button onClick={ClearBoxes}>Clear</Button>
-    </Flex>
-    <Flex flexDirection="column" gap="3x1" alignItems="left">
-      <body>{modelElements}</body>
-    </Flex>
-  </div>
+        <Button onClick={ClearBoxes}>Clear</Button>
+      </Flex>
+      <Flex flexDirection="column" gap="3x1" alignItems="left" style={{paddingTop: "35px"}}>
+        <body>{modelElements}</body>
+      </Flex>
+    </div>
   );
 }

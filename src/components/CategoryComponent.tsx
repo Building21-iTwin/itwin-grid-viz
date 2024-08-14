@@ -102,22 +102,20 @@ export function CategoryComponent() {
 
   return (
     <div className="">
-      <Flex
-      
-      style={{position: "sticky"}}>
+      <Flex style={{position: "absolute", width:"98%", padding: "5px"}}>
         <SearchBox
         className="SearchBox"
-        style={{position:"sticky" , width: "85", right: "10px", top: "1px" }}
+        style={{  width: "85%" }}
         aria-label="Search input"
         inputProps={{
           placeholder: "Search Categories...",
         }}
         onChange={searchInputChanged}
-        /> <Button onClick={ClearBoxes}>Clear</Button>
-        </Flex>
+        /> 
+        <Button onClick={ClearBoxes}>Clear</Button>
+      </Flex>
       
-
-      <Flex flexDirection="column" gap="3x1" alignItems="left">
+      <Flex flexDirection="column" gap="3x1" alignItems="left" style={{paddingTop: "35px"}}>
         <body>{categoryElements}</body>
       </Flex>
     </div>
