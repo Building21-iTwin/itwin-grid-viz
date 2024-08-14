@@ -91,6 +91,7 @@ export function ModelComponent() {
         onChange={searchInputChanged}
       />
     <Button onClick={ClearBoxes}>Clear</Button>
+    </Flex>
     <Flex flexDirection="column" gap="3x1" alignItems="left">
       <body>{modelElements}</body>
     </Flex>
