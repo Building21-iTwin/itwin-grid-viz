@@ -104,10 +104,10 @@ export function CategoryComponent() {
     <div className="">
       <Flex
       
-      style={{position: "absolute"}}>
+      style={{position: "sticky"}}>
         <SearchBox
         className="SearchBox"
-        style={{  width: "85", right: "10px", top: "1px" }}
+        style={{position:"sticky" , width: "85", right: "10px", top: "1px" }}
         aria-label="Search input"
         inputProps={{
           placeholder: "Search Categories...",

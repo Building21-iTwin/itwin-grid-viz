@@ -81,7 +81,7 @@ export function ModelComponent() {
   return (
     <div className="">
       <Flex
-      style={{position: "absolute"}}> <SearchBox
+      style={{position: "sticky"}}> <SearchBox
         className="SearchBox"
         style={{ position: "sticky", width: "75", right: "10px", top: "1px" }}
         aria-label="Search input"
