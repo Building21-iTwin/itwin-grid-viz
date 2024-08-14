@@ -28,7 +28,7 @@ export function CategoryComponent() {
     const getCategories = async () => {
       if (iModel) {
         const queryReader = iModel.createQueryReader(
-          "SELECT ECInstanceId, COALESCE(UserLabel, CodeValue) FROM bis.SpatialCategory"
+          "SELECT ECInstanceId, COALESCE(UserLabel, CodeValue) FROM bis.SpatialCategory WHERE ECInstanceId IN (SELECT DISTINCT Category.Id FROM bis.GeometricElement3d WHERE Category.Id IS NOT NULL)"
         );
         const cats = await queryReader.toArray();
         setCategories(cats.map((cat) => ({ id: cat[0], label: cat[1] })));
