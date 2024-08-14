@@ -22,7 +22,7 @@ export function ModelComponent() {
     const getModels = async () => {
       if (iModel) {
         const queryReader = iModel.createQueryReader(
-          "SELECT m.ECInstanceId modelId, COALESCE(p.UserLabel, CodeValue) FROM bis.PhysicalModel m JOIN bis.PhysicalPartition p ON p.ECInstanceId = m.ModeledElement.Id"
+          "SELECT m.ECInstanceId modelId, COALESCE(p.UserLabel, CodeValue) FROM bis.PhysicalModel m JOIN bis.PhysicalPartition p ON p.ECInstanceId = m.ModeledElement.Id WHERE m.ECInstanceId IN (SELECT DISTINCT Model.Id FROM bis.GeometricElement3d WHERE Model.Id IS NOT NULL)"
         );
         const cats = await queryReader.toArray();
         setModels(cats.map((cat) => ({ id: cat[0], label: cat[1] })));

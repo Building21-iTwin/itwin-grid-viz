@@ -213,6 +213,7 @@ const App: React.FC = () => {
           className: element.classname,
         }))
       );
+      console.log(elements);
     }
   };
 
