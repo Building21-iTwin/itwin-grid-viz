@@ -6,7 +6,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
 import { Presentation } from "@itwin/presentation-frontend";
-import { Tooltip } from "@itwin/itwinui-react";
+import { Button, Tooltip } from "@itwin/itwinui-react";
 import { SearchBox } from "@itwin/itwinui-react";
 import { Flex } from "@itwin/itwinui-react";
 import { useContext } from "react";
@@ -94,19 +94,28 @@ export function CategoryComponent() {
     setSearchString(event.target.value);
   }
 
+  function ClearBoxes(): void {
+    setSelectedCategoryIds([])
+  }
+
   <header></header>;
 
   return (
     <div className="">
-      <SearchBox
+      <Flex
+      
+      style={{position: "absolute"}}>
+        <SearchBox
         className="SearchBox"
-        style={{ position: "sticky", width: "75", right: "10px", top: "1px" }}
+        style={{  width: "85", right: "10px", top: "1px" }}
         aria-label="Search input"
         inputProps={{
           placeholder: "Search Categories...",
         }}
         onChange={searchInputChanged}
-      />
+        /> <Button onClick={ClearBoxes}>Clear</Button>
+        </Flex>
+      
 
       <Flex flexDirection="column" gap="3x1" alignItems="left">
         <body>{categoryElements}</body>

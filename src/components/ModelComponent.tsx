@@ -5,6 +5,7 @@ import { Presentation } from "@itwin/presentation-frontend";
 import { CategoryModelContext } from "../App";
 import { SearchBox } from "@itwin/itwinui-react/cjs/core/SearchBox";
 import { Tooltip } from "@itwin/itwinui-react/cjs/core/Tooltip";
+import { Button, Flex } from "@itwin/itwinui-react";
 
 interface Model {
   label: string;
@@ -73,9 +74,14 @@ export function ModelComponent() {
     setSearchString(event.target.value);
   }
 
+  function ClearBoxes(): void {
+    setSelectedModelIds([])
+  }
+
   return (
     <div className="">
-      <SearchBox
+      <Flex
+      style={{position: "absolute"}}> <SearchBox
         className="SearchBox"
         style={{ position: "sticky", width: "75", right: "10px", top: "1px" }}
         aria-label="Search input"
@@ -83,8 +89,8 @@ export function ModelComponent() {
           placeholder: "Search Models...",
         }}
         onChange={searchInputChanged}
-      />
-
+      /> <Button onClick={ClearBoxes}>Clear</Button>
+    </Flex>
       <ul>{modelElements}</ul>
     </div>
   );
