@@ -160,6 +160,8 @@ const App: React.FC = () => {
     });
   }, []);
 
+  // Maybe up there after finally, add the reality data default.
+
   const viewCreatorOptions = useMemo(
     () => ({ viewportConfigurer: viewConfiguration }),
     [viewConfiguration]

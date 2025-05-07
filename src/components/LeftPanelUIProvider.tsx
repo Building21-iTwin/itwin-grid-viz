@@ -8,6 +8,7 @@ import {
 import { CategoryComponent } from "./CategoryComponent";
 import { ModelComponent } from "./ModelComponent";
 import { QueriesComponent } from "./QueriesComponent";
+import { RealityDataWidget } from "../providers/RealityDataWidget";
 
 export class LeftPanelUIProvider implements UiItemsProvider {
   public readonly id = "LeftPanelUIProvider";
@@ -44,6 +45,13 @@ export class LeftPanelUIProvider implements UiItemsProvider {
         content: <QueriesComponent />,
       };
       widgets.push(thirdWidget);
+
+      const fourthWidget: Widget = {
+        id: "RealityDataWidget",
+        label: "Reality Data",
+        content: <RealityDataWidget />,
+      };
+      widgets.push(fourthWidget);
     }
 
     return widgets;
