@@ -53,6 +53,7 @@ import { LeftPanelUIProvider } from "./components/LeftPanelUIProvider";
 import { BottomGridUIProvider } from "./components/BottomGridUIProvider";
 import { IModel, QueryBinder, QueryRowFormat } from "@itwin/core-common";
 import { Presentation } from "@itwin/presentation-frontend";
+import { mapLayerOptions, tileAdminOptions } from "./maps/MapLayerOptions";
 
 export interface CategoryModelContextType {
   selectedModelIds: string[];
@@ -157,6 +158,9 @@ const App: React.FC = () => {
     tileTreesLoaded().finally(() => {
       void IModelApp.tools.run(FitViewTool.toolId, viewPort, true, false);
       viewPort.view.setStandardRotation(StandardViewId.Iso);
+      viewPort.changeBackgroundMapProps({
+        applyTerrain: true,
+      });
     });
   }, []);
 
@@ -285,6 +289,8 @@ const App: React.FC = () => {
             }),
             new MeasureToolsUiItemsProvider(),
           ]}
+          mapLayerOptions={mapLayerOptions}
+          tileAdmin={tileAdminOptions}
         />
       </div>
     </CategoryModelContext.Provider>
