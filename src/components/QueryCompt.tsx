@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, LabeledTextarea } from "@itwin/itwinui-react";
+import { LabeledTextarea } from "@itwin/itwinui-react";
 import { Flex } from "@itwin/itwinui-react";
 import { ColorDef } from "@itwin/core-common";
 

@@ -39,7 +39,6 @@ import {
   ViewerStatusbarItemsProvider,
 } from "@itwin/web-viewer-react";
 import React, {
-  useContext,
   createContext,
   useCallback,
   useEffect,
@@ -51,7 +50,7 @@ import { Auth } from "./Auth";
 import { history } from "./history";
 import { LeftPanelUIProvider } from "./components/LeftPanelUIProvider";
 import { BottomGridUIProvider } from "./components/BottomGridUIProvider";
-import { IModel, QueryBinder, QueryRowFormat } from "@itwin/core-common";
+import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
 import { Presentation } from "@itwin/presentation-frontend";
 import { mapLayerOptions, tileAdminOptions } from "./maps/MapLayerOptions";
 

@@ -4,7 +4,6 @@ import { Table } from "./TableGrid";
 import { UnifiedSelectionContextProvider } from "@itwin/presentation-components";
 import { useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { Property } from "@itwin/ecschema-metadata";
 
 function RulesTable() {
   const [iModel, setIModel] = React.useState<IModelConnection | undefined>(

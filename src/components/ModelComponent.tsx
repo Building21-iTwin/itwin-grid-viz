@@ -1,7 +1,5 @@
 import { IModelApp } from "@itwin/core-frontend";
 import React, { useContext, useEffect, useState } from "react";
-import { QueryBinder, QueryRowFormat } from "@itwin/core-common";
-import { Presentation } from "@itwin/presentation-frontend";
 import { CategoryModelContext } from "../App";
 import { SearchBox } from "@itwin/itwinui-react/cjs/core/SearchBox";
 import { Tooltip } from "@itwin/itwinui-react/cjs/core/Tooltip";
@@ -32,7 +30,7 @@ export function ModelComponent() {
     if (models.length === 0) {
       getModels();
     }
-  }, [models]);
+  }, [models, iModel]);
 
   const handleModelChange = async (
     event: React.ChangeEvent<HTMLInputElement>
